@@ -1,8 +1,11 @@
 .PHONY: get-version build test tags
 
 CURRENT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+# TODO: reverse comments
 # IMAGE_NAME="docker.pkg.github.com/nextools/images/firefox:rc"
 IMAGE_NAME="ghcr.io/shenato/docker-chromium/firefox:rc"
+# DOCKER_NAMESPACE="nextools"
+DOCKER_NAMESPACE="eskimoe"
 
 get-version:
 	@docker pull ubuntu:bionic > /dev/null 2>&1
@@ -19,14 +22,15 @@ test:
 	@docker run --detach --publish 9222:9222 --name firefox $(IMAGE_NAME)
 	@timeout 20s sh -c "trap 'docker container rm --force firefox' 0; until curl http://localhost:9222/json/version; do sleep 1; done"
 
+# TODO: Change ghcr.io/shenato/docker-chromium/firefox to docker.pkg.github.com/nextools/images/firefox:$$tag;
 tags:
 	@docker pull ${IMAGE_NAME}
 	@for tag in $(version) latest; do \
 		echo $$tag; \
-		docker tag $(IMAGE_NAME) docker.pkg.github.com/nextools/images/firefox:$$tag; \
-		docker tag $(IMAGE_NAME) nextools/firefox:$$tag; \
+		docker tag $(IMAGE_NAME) ghcr.io/shenato/docker-chromium/firefox:$$tag; \
+		docker tag $(IMAGE_NAME) ${DOCKER_NAMESPACE}/firefox:$$tag; \
 		git tag --force firefox@$$tag >/dev/null 2>&1; \
 	done
-	@docker push docker.pkg.github.com/nextools/images/firefox
-	@docker push nextools/firefox
+	@docker push ghcr.io/shenato/docker-chromium/firefox
+	@docker push ${DOCKER_NAMESPACE}/firefox
 

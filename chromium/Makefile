@@ -1,8 +1,12 @@
 .PHONY: get-version build test tags
 
 CURRENT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+
+# TODO: reverse comments
 # IMAGE_NAME="docker.pkg.github.com/nextools/images/chromium:rc"
 IMAGE_NAME="ghcr.io/shenato/docker-chromium/chromium:rc"
+# DOCKER_NAMESPACE="nextools"
+DOCKER_NAMESPACE="eskimoe"
 
 get-version:
 	@docker pull ubuntu:bionic > /dev/null 2>&1
@@ -18,6 +22,7 @@ test:
 	@docker run --detach --publish 9222:9222 --name chromium $(IMAGE_NAME)
 	@timeout 20s sh -c "trap 'docker container rm --force chromium' 0; until curl http://localhost:9222/json/version; do sleep 1; done"
 
+# TODO: Change ghcr.io/shenato/docker-chromium/chromium to docker.pkg.github.com/nextools/images/chromium:$$tag;
 tags:
 	@docker pull ${IMAGE_NAME}
 	@for i in 3 2 1 0 -1; do \
@@ -27,9 +32,9 @@ tags:
 			tag=latest; \
 		fi; \
 		echo $$tag; \
-		docker tag $(IMAGE_NAME) docker.pkg.github.com/nextools/images/chromium:$$tag; \
-		docker tag $(IMAGE_NAME) nextools/chromium:$$tag; \
+		docker tag $(IMAGE_NAME) ghcr.io/shenato/docker-chromium/chromium:$$tag; \
+		docker tag $(IMAGE_NAME) ${DOCKER_NAMESPACE}/chromium:$$tag; \
 		git tag --force chromium@$$tag; \
 	done
-	@docker push docker.pkg.github.com/nextools/images/chromium
-	@docker push nextools/chromium
+	@docker push ghcr.io/shenato/docker-chromium/chromium
+	@docker push ${DOCKER_NAMESPACE}/chromium
