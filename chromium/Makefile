@@ -24,7 +24,6 @@ test:
 
 # TODO: Change ghcr.io/shenato/docker-chromium/chromium to docker.pkg.github.com/nextools/images/chromium:$$tag;
 tags:
-	@docker pull ${IMAGE_NAME}
 	@for i in 3 2 1 0 -1; do \
 		if [ $$i -ge 0 ]; then \
 			tag=`echo $(version) | sed --regexp-extended "s/(\.[0-9]+){$$i}$$//"`; \
@@ -32,9 +31,7 @@ tags:
 			tag=latest; \
 		fi; \
 		echo $$tag; \
-		docker tag $(IMAGE_NAME) ghcr.io/shenato/docker-chromium/chromium:$$tag; \
-		docker tag $(IMAGE_NAME) ${DOCKER_NAMESPACE}/chromium:$$tag; \
+		docker buildx imagetools create $(IMAGE_NAME) --tag ghcr.io/shenato/docker-chromium/chromium:$$tag; \
+		docker buildx imagetools create $(IMAGE_NAME) --tag ${DOCKER_NAMESPACE}/chromium:$$tag; \
 		git tag --force chromium@$$tag; \
 	done
-	@docker push ghcr.io/shenato/docker-chromium/chromium
-	@docker push ${DOCKER_NAMESPACE}/chromium

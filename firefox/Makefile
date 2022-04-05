@@ -24,13 +24,9 @@ test:
 
 # TODO: Change ghcr.io/shenato/docker-chromium/firefox to docker.pkg.github.com/nextools/images/firefox:$$tag;
 tags:
-	@docker pull ${IMAGE_NAME}
 	@for tag in $(version) latest; do \
 		echo $$tag; \
-		docker tag $(IMAGE_NAME) ghcr.io/shenato/docker-chromium/firefox:$$tag; \
-		docker tag $(IMAGE_NAME) ${DOCKER_NAMESPACE}/firefox:$$tag; \
+		docker buildx imagetools create $(IMAGE_NAME) --tag ghcr.io/shenato/docker-chromium/firefox:$$tag; \
+		docker buildx imagetools create $(IMAGE_NAME) --tag ${DOCKER_NAMESPACE}/firefox:$$tag; \
 		git tag --force firefox@$$tag >/dev/null 2>&1; \
 	done
-	@docker push ghcr.io/shenato/docker-chromium/firefox
-	@docker push ${DOCKER_NAMESPACE}/firefox
-
