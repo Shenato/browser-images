@@ -3,7 +3,7 @@
 CURRENT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 # TODO: reverse comments
 # IMAGE_NAME="docker.pkg.github.com/nextools/images/firefox:rc"
-IMAGE_NAME="ghcr.io/shenato/docker-chromium/firefox:rc"
+IMAGE_NAME="ghcr.io/shenato/docker-browser/firefox:rc"
 # DOCKER_NAMESPACE="nextools"
 DOCKER_NAMESPACE="eskimoe"
 
@@ -22,11 +22,11 @@ test:
 	@docker run --detach --publish 9222:9222 --name firefox $(IMAGE_NAME)
 	@timeout 20s sh -c "trap 'docker container rm --force firefox' 0; until curl http://localhost:9222/json/version; do sleep 1; done"
 
-# TODO: Change ghcr.io/shenato/docker-chromium/firefox to docker.pkg.github.com/nextools/images/firefox:$$tag;
+# TODO: Change ghcr.io/shenato/docker-browser/firefox to docker.pkg.github.com/nextools/images/firefox:$$tag;
 tags:
 	@for tag in $(version) latest; do \
 		echo $$tag; \
-		docker buildx imagetools create $(IMAGE_NAME) --tag ghcr.io/shenato/docker-chromium/firefox:$$tag; \
+		docker buildx imagetools create $(IMAGE_NAME) --tag ghcr.io/shenato/docker-browser/firefox:$$tag; \
 		docker buildx imagetools create $(IMAGE_NAME) --tag ${DOCKER_NAMESPACE}/firefox:$$tag; \
 		git tag --force firefox@$$tag >/dev/null 2>&1; \
 	done
