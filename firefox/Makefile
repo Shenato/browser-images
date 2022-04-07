@@ -27,6 +27,10 @@ tags:
 	@for tag in $(version) latest; do \
 		echo $$tag; \
 		docker buildx imagetools create $(IMAGE_NAME) --tag ghcr.io/shenato/browser-images/firefox:$$tag; \
-		regctl image copy $(IMAGE_NAME) ${DOCKER_NAMESPACE}/firefox:$$tag; \
+		chmod +r ${HOME}/.docker/config.json; \
+		docker container run -it --rm --net host \
+			-u "$(id -u):$(id -g)" -e HOME -v ${HOME}:${HOME} \
+			-v /etc/docker/certs.d:/etc/docker/certs.d:ro \
+			regclient/regctl:latest image copy $(IMAGE_NAME) ${DOCKER_NAMESPACE}/firefox:$$tag; \
 		git tag --force firefox@$$tag >/dev/null 2>&1; \
 	done
