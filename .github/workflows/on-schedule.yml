@@ -106,7 +106,7 @@ jobs:
         if: steps.check_status.outputs.result == 'outdated'
         uses: addnab/docker-run-action@v3
         with:
-          image: ghcr.io/regclient/regctl:buildcache-alpine
+          image: ghcr.io/regclient/regctl:latest
           options: -v ${{ github.workspace }}:/var/www
           run: make --file ${{ matrix.package }}/Makefile tags version=${{ steps.get_version.outputs.result }}
 
