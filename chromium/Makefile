@@ -32,6 +32,6 @@ tags:
 		fi; \
 		echo $$tag; \
 		docker buildx imagetools create $(IMAGE_NAME) --tag ghcr.io/shenato/browser-images/chromium:$$tag; \
-		docker buildx imagetools create $(IMAGE_NAME) --tag ${DOCKER_NAMESPACE}/chromium:$$tag; \
+		regctl image copy $(IMAGE_NAME) ${DOCKER_NAMESPACE}/chromium:$$tag; \
 		git tag --force chromium@$$tag; \
 	done
