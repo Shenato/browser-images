@@ -17,7 +17,8 @@ env:
 jobs:
   check:
     runs-on: ubuntu-latest
-
+    container:
+      image: ghcr.io/regclient/regctl:latest
     strategy:
       matrix:
         package:
@@ -102,13 +103,10 @@ jobs:
         if: steps.check_status.outputs.result == 'outdated'
         run: git commit --message '♻️ ${{ matrix.package }}@${{ steps.get_version.outputs.result }}' ${{ matrix.package }}/readme.md
 
-      - name: Run the build process with Docker
+      - name: Make Docker and Git tags
+        uses: ghcr.io/regclient/regctl:buildcache-alpine
         if: steps.check_status.outputs.result == 'outdated'
-        uses: addnab/docker-run-action@v3
-        with:
-          image: ghcr.io/regclient/regctl:latest
-          options: -v ${{ github.workspace }}:/var/www
-          run: make --file ${{ matrix.package }}/Makefile tags version=${{ steps.get_version.outputs.result }}
+        run: make --file ${{ matrix.package }}/Makefile tags version=${{ steps.get_version.outputs.result }}
 
       - name: Git push
         if: steps.check_status.outputs.result == 'outdated'
