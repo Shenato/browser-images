@@ -1,3 +1,4 @@
+THIS IS A WIP to try to make this repo mergeable back into nextools
 (This is a fork of [nextools/images](https://github.com/nextools/images) Which adds multiplatform support for arm64 and amd64 at the cost of only publishing to Github Packages)
 # Images
 
