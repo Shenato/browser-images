@@ -102,9 +102,13 @@ jobs:
         if: steps.check_status.outputs.result == 'outdated'
         run: git commit --message '♻️ ${{ matrix.package }}@${{ steps.get_version.outputs.result }}' ${{ matrix.package }}/readme.md
 
-      - name: Make Docker and Git tags
+      - name: Run the build process with Docker
         if: steps.check_status.outputs.result == 'outdated'
-        run: make --file ${{ matrix.package }}/Makefile tags version=${{ steps.get_version.outputs.result }}
+        uses: addnab/docker-run-action@v3
+        with:
+          image: ghcr.io/regclient/regctl:buildcache-alpine
+          options: -v ${{ github.workspace }}:/var/www
+          run: make --file ${{ matrix.package }}/Makefile tags version=${{ steps.get_version.outputs.result }}
 
       - name: Git push
         if: steps.check_status.outputs.result == 'outdated'
