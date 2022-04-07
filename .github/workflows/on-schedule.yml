@@ -104,7 +104,6 @@ jobs:
         run: git commit --message '♻️ ${{ matrix.package }}@${{ steps.get_version.outputs.result }}' ${{ matrix.package }}/readme.md
 
       - name: Make Docker and Git tags
-        uses: ghcr.io/regclient/regctl:buildcache-alpine
         if: steps.check_status.outputs.result == 'outdated'
         run: make --file ${{ matrix.package }}/Makefile tags version=${{ steps.get_version.outputs.result }}
 
