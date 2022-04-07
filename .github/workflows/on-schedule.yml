@@ -17,8 +17,7 @@ env:
 jobs:
   check:
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/regclient/regctl:latest
+
     strategy:
       matrix:
         package:
