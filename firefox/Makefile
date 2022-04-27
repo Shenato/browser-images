@@ -1,10 +1,8 @@
 .PHONY: get-version build test tags
 
 CURRENT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
-# TODO: reverse comments
-# IMAGE_NAME="docker.pkg.github.com/nextools/images/firefox:rc"
+
 IMAGE_NAME="ghcr.io/shenato/browser-images/firefox:rc"
-# DOCKER_NAMESPACE="nextools"
 DOCKER_NAMESPACE="nextnextools"
 
 get-version:
@@ -22,7 +20,6 @@ test:
 	@docker run --detach --publish 9222:9222 --name firefox $(IMAGE_NAME)
 	@timeout 20s sh -c "trap 'docker container rm --force firefox' 0; until curl http://localhost:9222/json/version; do sleep 1; done"
 
-# TODO: Change ghcr.io/shenato/browser-images/firefox to docker.pkg.github.com/nextools/images/firefox:$$tag;
 tags:
 	@for tag in $(version) latest; do \
 		echo $$tag; \

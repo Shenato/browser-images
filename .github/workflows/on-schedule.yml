@@ -1,14 +1,13 @@
 name: Check for updates
 
-# TODO: change on back to this:
-# on:
-#   repository_dispatch:
-#     types: check
-#   schedule:
-#     # every 12 hours
-#     - cron:  '0 */12 * * *'
+on:
+  repository_dispatch:
+    types: check
+  schedule:
+    # every 12 hours
+    - cron:  '0 */12 * * *'
 
-on: [push]
+# on: [push]
 
 
 env:
@@ -54,12 +53,10 @@ jobs:
 
       - name: Docker GitHub Packages login
         if: steps.check_status.outputs.result == 'outdated'
-        # TODO: Change this back DOCKER_DEPLOYER to GITHUB_TOKEN and ghcr.io to docker.pkg.github.com
         run: echo ${{ secrets.DOCKER_DEPLOYER }} | docker login --username ${{ github.actor }} --password-stdin ghcr.io
 
       - name: Docker Hub login
         if: steps.check_status.outputs.result == 'outdated'
-        # TODO: Change login from nextnextools back to nextoolsbot
         run: echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login --username shenato --password-stdin
 
       - name: Build image (push)
@@ -89,7 +86,6 @@ jobs:
 
       - name: Git pull
         if: steps.check_status.outputs.result == 'outdated'
-        #TODO: Chang ethis from main back to master
         run: git pull origin main
 
       - name: Update readme
@@ -108,16 +104,4 @@ jobs:
 
       - name: Git push
         if: steps.check_status.outputs.result == 'outdated'
-        #TODO: Chang ethis from main back to master
         run: git push --force --tags origin main
-
-
-
-      # - name: Docker GitHub Packages push
-      #   if: steps.check_status.outputs.result == 'outdated'
-      #   run: docker push docker.pkg.github.com/nextools/images/${{ matrix.package }}
-
-
-      # - name: Docker Hub push
-      #   if: steps.check_status.outputs.result == 'outdated'
-      #   run: docker push nextools/${{ matrix.package }}
