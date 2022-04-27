@@ -7,10 +7,10 @@ name: Check for updates
 #   schedule:
 #     # every 12 hours
 #     - cron:  '0 */12 * * *'
-    
+
 on: [push]
 
-    
+
 env:
   DOCKER_DEFAULT_PLATFORM: linux/amd64
 
@@ -27,7 +27,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        
+
       - name: Install buildx
         id: buildx
         uses: crazy-max/ghaction-docker-buildx@v1
@@ -56,11 +56,11 @@ jobs:
         if: steps.check_status.outputs.result == 'outdated'
         # TODO: Change this back DOCKER_DEPLOYER to GITHUB_TOKEN and ghcr.io to docker.pkg.github.com
         run: echo ${{ secrets.DOCKER_DEPLOYER }} | docker login --username ${{ github.actor }} --password-stdin ghcr.io
-      
+
       - name: Docker Hub login
         if: steps.check_status.outputs.result == 'outdated'
         # TODO: Change login from eskimoe back to nextoolsbot
-        run: echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login --username eskimoe --password-stdin
+        run: echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login --username nextnextools --password-stdin
 
       - name: Build image (push)
         if: steps.check_status.outputs.result == 'outdated'
