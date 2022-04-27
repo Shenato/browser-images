@@ -59,8 +59,8 @@ jobs:
 
       - name: Docker Hub login
         if: steps.check_status.outputs.result == 'outdated'
-        # TODO: Change login from eskimoe back to nextoolsbot
-        run: echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login --username nextnextools --password-stdin
+        # TODO: Change login from nextnextools back to nextoolsbot
+        run: echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login --username shenato --password-stdin
 
       - name: Build image (push)
         if: steps.check_status.outputs.result == 'outdated'

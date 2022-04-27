@@ -6,7 +6,7 @@ CURRENT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 # IMAGE_NAME="docker.pkg.github.com/nextools/images/chromium:rc"
 IMAGE_NAME="ghcr.io/shenato/browser-images/chromium:rc"
 # DOCKER_NAMESPACE="nextools"
-DOCKER_NAMESPACE="eskimoe"
+DOCKER_NAMESPACE="nextnextools"
 
 get-version:
 	@docker pull ubuntu:bionic > /dev/null 2>&1
